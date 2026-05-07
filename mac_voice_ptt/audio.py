@@ -72,7 +72,7 @@ class AudioRecorder:
     def _callback(self, indata, frames, time_info, status) -> None:  # noqa: ANN001
         del frames, time_info
         if status:
-            print(f"Audio status: {status}")
+            print(f"Audio status: {status}. Check microphone availability and macOS Microphone permission.")
         if self._started_at and (time.monotonic() - self._started_at) >= self.max_record_seconds:
             self._stop_event.set()
             return

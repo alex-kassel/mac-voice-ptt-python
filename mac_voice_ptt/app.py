@@ -13,6 +13,9 @@ from mac_voice_ptt.text_output import insert_transcript
 from mac_voice_ptt.transcription import WhisperTranscriber
 
 
+MIN_RECORDING_DURATION_SECONDS = 0.15
+
+
 @dataclass
 class AppState:
     listening_enabled: bool = True
@@ -83,7 +86,7 @@ class MacVoicePTTApp:
         import rumps
 
         try:
-            if duration_seconds < 0.15:
+            if duration_seconds < MIN_RECORDING_DURATION_SECONDS:
                 rumps.notification("Mac Voice PTT", "Recording skipped", "The recording was too short.")
                 return
 
@@ -97,8 +100,10 @@ class MacVoicePTTApp:
             rumps.notification("Mac Voice PTT", subtitle, transcript[:120])
             if not insert_result.success:
                 print(insert_result.detail)
+        except (OSError, RuntimeError) as error:
+            rumps.notification("Mac Voice PTT", "Processing failed", str(error))
         except Exception as error:  # noqa: BLE001
-            rumps.notification("Mac Voice PTT", "Error", str(error))
+            rumps.notification("Mac Voice PTT", "Unexpected error", str(error))
         finally:
             with self._lock:
                 self.state.processing = False

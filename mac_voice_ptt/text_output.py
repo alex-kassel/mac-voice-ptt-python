@@ -25,6 +25,6 @@ def insert_transcript(text: str) -> InsertResult:
     try:
         paste_active_app()
     except subprocess.CalledProcessError as error:
-        detail = error.stderr.strip() or "Transcript copied to clipboard; paste manually with Command+V."
+        detail = error.stderr.strip() or "Transcript copied to clipboard; paste manually with ⌘V."
         return InsertResult(success=False, mode="clipboard", detail=detail)
     return InsertResult(success=True, mode="paste", detail="Transcript pasted into the active app.")
