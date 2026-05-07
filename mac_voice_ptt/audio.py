@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import queue
 import tempfile
@@ -7,6 +8,9 @@ import threading
 import time
 from dataclasses import dataclass
 from typing import Any
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -73,7 +77,7 @@ class AudioRecorder:
     def _callback(self, indata: Any, frames: int, time_info: Any, status: Any) -> None:
         del frames, time_info
         if status:
-            print(f"Audio status: {status}. Check microphone availability and macOS Microphone permission.")
+            LOGGER.warning("Audio status: %s. Check microphone availability and macOS Microphone permission.", status)
         if self._started_at and (time.monotonic() - self._started_at) >= self.max_record_seconds:
             self._stop_event.set()
             return

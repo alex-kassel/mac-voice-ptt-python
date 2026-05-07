@@ -103,7 +103,7 @@ class MacVoicePTTApp:
                 print(insert_result.detail)
         except (OSError, RuntimeError) as error:
             rumps.notification("Mac Voice PTT", "Processing failed", str(error))
-        except Exception as error:  # noqa: BLE001
+        except Exception as error:
             rumps.notification("Mac Voice PTT", "Unexpected error", str(error))
         finally:
             with self._lock:
