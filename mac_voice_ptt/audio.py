@@ -36,7 +36,7 @@ class AudioRecorder:
         import sounddevice as sd
         import soundfile as sf
 
-        temp_file = tempfile.NamedTemporaryFile(prefix="mac-voice-ptt-", suffix=".wav", delete=False)
+        temp_file = tempfile.NamedTemporaryFile(prefix="mac_voice_ptt_", suffix=".wav", delete=False)
         temp_file.close()
         self._path = temp_file.name
         self._started_at = time.monotonic()

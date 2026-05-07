@@ -42,6 +42,7 @@ class MacVoicePTTApp:
         self._status_label = None
         self._app = None
         self._lock = threading.Lock()
+        self._processing_thread: threading.Thread | None = None
 
     def run(self) -> None:
         import rumps
@@ -63,6 +64,8 @@ class MacVoicePTTApp:
         import rumps
 
         self.hotkey_listener.stop()
+        if self._processing_thread is not None and self._processing_thread.is_alive():
+            self._processing_thread.join(timeout=5)
         rumps.quit_application()
 
     def begin_recording(self) -> None:
@@ -81,7 +84,12 @@ class MacVoicePTTApp:
             self.state.processing = True
         self._update_status("Transcribing")
         result = self.recorder.stop()
-        threading.Thread(target=self._process_recording, args=(result.path, result.duration_seconds), daemon=True).start()
+        self._processing_thread = threading.Thread(
+            target=self._process_recording,
+            args=(result.path, result.duration_seconds),
+            daemon=True,
+        )
+        self._processing_thread.start()
 
     def _process_recording(self, path: str, duration_seconds: float) -> None:
         import rumps
@@ -108,6 +116,7 @@ class MacVoicePTTApp:
         finally:
             with self._lock:
                 self.state.processing = False
+            self._processing_thread = None
             self._update_status("Idle" if self.state.listening_enabled else "Paused")
             if path and os.path.exists(path):
                 os.remove(path)

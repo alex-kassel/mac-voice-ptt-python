@@ -33,7 +33,7 @@ class ConfigTests(unittest.TestCase):
         self.assertIn("system", summary)
         self.assertIn("machine", summary)
         self.assertIn("python", summary)
-        self.assertIn("target", summary)
+        self.assertIn("platform_target", summary)
 
     def test_platform_summary_marks_apple_silicon_as_target(self) -> None:
         with patch("mac_voice_ptt.config.platform.system", return_value="Darwin"), patch(
@@ -41,7 +41,7 @@ class ConfigTests(unittest.TestCase):
         ), patch("mac_voice_ptt.config.platform.python_version", return_value="3.12.3"):
             summary = platform_summary()
 
-        self.assertEqual(summary["target"], "Apple Silicon ready")
+        self.assertEqual(summary["platform_target"], "Apple Silicon ready")
 
 
 if __name__ == "__main__":

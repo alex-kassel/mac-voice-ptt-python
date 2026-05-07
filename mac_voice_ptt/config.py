@@ -55,5 +55,7 @@ def platform_summary() -> dict[str, str]:
         "system": platform.system(),
         "machine": platform.machine(),
         "python": platform.python_version(),
-        "target": "Apple Silicon ready" if platform.system() == "Darwin" and platform.machine() == "arm64" else "Non-target environment",
+        "platform_target": "Apple Silicon ready"
+        if platform.system() == "Darwin" and platform.machine() == "arm64"
+        else "Non-target environment",
     }
