@@ -5,6 +5,7 @@ import os
 import platform
 import threading
 from dataclasses import dataclass
+from typing import Any
 
 from mac_voice_ptt.audio import AudioRecorder
 from mac_voice_ptt.config import AppConfig, platform_summary
@@ -53,12 +54,12 @@ class MacVoicePTTApp:
         rumps.notification("Mac Voice PTT", "Ready", f"Hold {self.config.hotkey_display} to dictate.")
         self._app.run()
 
-    def toggle_listening(self, sender) -> None:  # noqa: ANN001
+    def toggle_listening(self, sender: Any) -> None:
         self.state.listening_enabled = not self.state.listening_enabled
         sender.title = "Disable Listening" if self.state.listening_enabled else "Enable Listening"
         self._update_status("Idle" if self.state.listening_enabled else "Paused")
 
-    def quit(self, _sender) -> None:  # noqa: ANN001
+    def quit(self, _sender: Any) -> None:
         import rumps
 
         self.hotkey_listener.stop()

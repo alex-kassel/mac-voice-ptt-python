@@ -6,6 +6,7 @@ import tempfile
 import threading
 import time
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -69,7 +70,7 @@ class AudioRecorder:
             os.remove(self._path)
         self._path = None
 
-    def _callback(self, indata, frames, time_info, status) -> None:  # noqa: ANN001
+    def _callback(self, indata: Any, frames: int, time_info: Any, status: Any) -> None:
         del frames, time_info
         if status:
             print(f"Audio status: {status}. Check microphone availability and macOS Microphone permission.")
